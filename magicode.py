@@ -42,6 +42,26 @@ while(raw_video.isOpened()):
     upper_red = np.array([180,255,255])
     mask2 = cv2.inRange(hsv, lower_red, upper_red)
     
+    mask1 = mask1+ mask2
+
+    mask1  = cv2.morphologyEx(mask1, cv2.MORPH_OPEN, np.ones((3,3), np.uint8), iterations = 2 )
+    mask1 =  cv2.dilate(mask1, np.ones ((3,3), np.uint8),iterations = 1)
+
+    mask2 = cv2.bitwise_not(mask1)
+
+    res1 = cv2.bitwise_and(background, background, mask = mask1)
+    res2 = cv2.bitwise_and(img, img, mask = mask2)
+
+    final_output = cv2.addWeighted(res1,1,  res2,1, 0 )
+    cv2.imshow("Invisible Man", final_output)
+
+    k =  cv2.waitKey(10)
+    #27 - Escape key
+    if k == 27:
+        break
+
+    
+
 
 
     
